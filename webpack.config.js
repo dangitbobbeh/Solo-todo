@@ -6,7 +6,13 @@ module.exports = {
   output: { path: path.resolve(__dirname, "build"), filename: "index.bundle.js" },
   mode: process.env.NODE_ENV || "development",
   resolve: { modules: [path.resolve(__dirname, "src"), "node_modules"] },
-  devServer: { contentBase: path.join(__dirname, "src") },
+  // devServer: {  },
+  devServer:{
+            contentBase: path.join(__dirname, "/front-end/src/index.html"),
+            publicPath: '/',
+            proxy: {
+              "/" : 'http://localhost:3000/'
+            }},
   module: {
     rules: [
       {

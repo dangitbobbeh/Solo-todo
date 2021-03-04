@@ -1,11 +1,34 @@
-const mongoose = require("mongoose")
-mongoose.connect("mongodb://localhost/todo-app", {
-  // connecting to the mongodb database name: "todo-app" locally
-  keepAlive: true, // keeping the connection alive
+const mongoose = require('mongoose');
+
+const MONGO_URI = 'mongodb+srv://DavidB:<password>@todo.gkvfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+mongoose.connect(MONGO_URI, {
+  // options for the connect method to parse the URI
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  // sets the name of the DB that our collections are part of
+  dbName: 'Todo'
 })
-mongoose.set("debug", true) // enabling debugging information to be printed to the console for debugging purposes
-mongoose.Promise = Promise // setting mongoose's Promise to use Node's Promise
+  .then(() => console.log('Connected to Mongo DB.'))
+  .catch(err => console.log(err));
 
-module.exports.Todo = require("./todo") // requiring the todo model that we just created in mongodb
+const Schema = mongoose.Schema;
+
+const todoSchema = new mongoose.Schema({
+  // creating a schema for todo
+  task: {
+    // field1: task
+    type: String, // task is a string
+    unique: true, // it has to be unique
+    required: true, // it is required
+  },
+  completed: {
+    // field2: completed
+    type: Boolean, // it is a boolean
+    default: false, // the default is false
+  },
+})
+
+const todoModel = mongoose.model("Todo", todoSchema) // creating the model from the schema
+
+module.exports = todoModel // exporting the model

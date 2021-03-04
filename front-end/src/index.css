@@ -1,4 +1,21 @@
 body {
-  color: #2a2b2b;
-  background-color: #d4d3d8;
+  padding: 50px;
+  background-color: #a0dfff;
+  font-family: sans-serif;
+}
+#container {
+  display: flex;
+  justify-content: center;
+}
+
+h3{
+  font-family: cursive;
+}
+
+.Listcontainer{
+  border:5px solid red
+}
+
+.Items {
+  border: 3px solid black
 }
