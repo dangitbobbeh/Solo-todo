@@ -13,9 +13,26 @@ h3{
 }
 
 .Listcontainer{
-  border:5px solid red
+  border:5px solid red;
+  background-color: bisque; 
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+
 }
 
 .Items {
   border: 3px solid black
 }
+
+button {
+  border-radius: 6px;
+  transition-duration: 0.4s;
+  background-color: whitesmoke;
+  color:tomato;
+}
+
+button:hover {
+  background-color: #cc1818;
+  color: white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+

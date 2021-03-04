@@ -4,28 +4,43 @@ const app = express() // generate an app object
 const fs = require('fs')
 const bodyParser = require("body-parser") // requiring the body-parser
 const PORT = process.env.PORT || 3000 // port that the server is running on => localhost:3000
-const db = require("../models")
+const todoModel = require('../models/index.js')
 
 app.use(bodyParser.json()) // telling the app that we are going to use json to handle incoming payload
 
 app.use('/build', express.static(path.join(__dirname, '../build')));
 
 app.get('/list', (req, res) => {
-  // console.log(path.resolve(__dirname, "../db.json"))
-  res.sendFile(path.resolve(__dirname, "../db.json"))
+  // res.sendFile(path.resolve(__dirname, "../db.json"))
+  todoModel.find({})
+  .then(data => res.send(data))
 })
 
 app.post('/list', (req, res) => {
-  fs.readFile(path.join(__dirname, "../db.json"), function (err, data) {
-    let json = JSON.parse(data)
-    json.push(req.body)
-    fs.writeFile(path.join(__dirname, "../db.json"), JSON.stringify(json), (err)=>console.log("saved!"))
-    return res.end()
-})
-})
+  // const newItem = new todoModel(req.body)
+    todoModel.create(req.body, (err, results) =>{
+      if(err){
+        res.status(400).send('Error adding item. This is already on your list!');
+      }else{
+        res.send(results);
+      }
+    });
+  })
 
-app.put('/list/:name', (req,res) => {
-  
+
+  // fs.readFile(path.join(__dirname, "../db.json"), function (err, data) {
+  //   let json = JSON.parse(data)
+  //   json.push(req.body)
+  //   fs.writeFile(path.join(__dirname, "../db.json"), JSON.stringify(json), (err)=>console.log("saved!"))
+  //   return res.end()
+
+app.put('/list/', async (req,res) => {
+  // console.log(req.body._id)
+  const doc = await todoModel.findOneAndUpdate({_id: req.body._id},
+    {completed:true}, {new:true})
+  .then((data) => console.log("found data", data))
+  res.status(200).send(req.body + "complete!")
+
 })
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../front-end/src/index.html')));
