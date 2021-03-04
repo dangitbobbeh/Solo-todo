@@ -8,6 +8,7 @@ class Listcontainer extends Component {
     this.state = {
         items :[],
         rando: {},
+        timer: 0,
     }
     this.addItem = this.addItem.bind(this)
     this.shuffle = this.shuffle.bind(this)
@@ -19,7 +20,12 @@ componentDidMount(){
     fetch("/list")
     .then((res) => res.json())
     .then((data) => this.setState({...this.state, items: data}))
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
+
+      setInterval(
+      () => this.tick(),
+      1000
+    );
 }
 
 getData(){
@@ -32,9 +38,10 @@ getData(){
 
 shuffle(){
   let myArray = this.state.items
+  let timer = 10
   let rando = myArray[Math.floor(Math.random()*myArray.length)]
   // console.log("rando", rando)
-  if(rando.completed === false){this.setState({...this.state, rando})}
+  if(rando.completed === false){this.setState({...this.state, rando, timer})}
   else{while(rando.completed===true){rando = myArray[Math.floor(Math.random()*myArray.length)]}}
 }
 
@@ -63,6 +70,14 @@ completeTask(){
   this.shuffle();
   console.log("post-completion, post shuffle state", this.state)
 }
+tick() {
+  let timer = this.state.timer;
+  timer--;
+  if(timer<0){timer=10}
+  else if(timer===0){timer=10; this.shuffle()}
+    this.setState({timer});
+  }
+
 
 addItem(e) {
     this.setState((prevState) => {
@@ -99,8 +114,9 @@ render(){
         <OneItem className='OneItem' 
         rando={this.state.rando} 
         shuffle={this.shuffle}
-        completeTask={this.completeTask}/>
-        <br/>
+        completeTask={this.completeTask}
+        timer={this.state.timer}/>
+        <br></br>
         <AddItemForm entries={this.state.items} addItem={this.addItem}/>
         </div>
     )
